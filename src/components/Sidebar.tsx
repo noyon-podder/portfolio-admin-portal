@@ -6,7 +6,7 @@ const Sidebar = () => {
   const router = useLocation();
   console.log(router.pathname);
   return (
-    <div className="w-[300px] bg-[#121212] h-screen fixed top-0 left-0  ">
+    <div className="w-[300px] hidden lg:block bg-[#121212] h-screen fixed top-0 left-0  ">
       <div className="py-5 border-b border-gray-600">
         <h2 className="uppercase text-[20px] text-white font-semibold text-center">
           Portfolio
