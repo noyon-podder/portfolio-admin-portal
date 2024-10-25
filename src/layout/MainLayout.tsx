@@ -5,7 +5,9 @@ const MainLayout = () => {
   return (
     <div className="flex">
       <Sidebar />
-      <Outlet />
+      <div className="ml-[300px] p-5">
+        <Outlet />
+      </div>
     </div>
   );
 };
