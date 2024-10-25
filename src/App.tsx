@@ -4,7 +4,6 @@ import { router } from "./router/route";
 function App() {
   return (
     <>
-      {" "}
       <RouterProvider router={router} />
     </>
   );
