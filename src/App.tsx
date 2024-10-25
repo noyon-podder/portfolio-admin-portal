@@ -7,7 +7,7 @@ function App() {
       {" "}
       <RouterProvider router={router} />
     </>
-  
+  );
 }
 
 export default App;
