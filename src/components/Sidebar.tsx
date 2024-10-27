@@ -1,6 +1,27 @@
-import { Edit } from "lucide-react";
+import { Edit, Projector } from "lucide-react";
 
 import { Link, useLocation } from "react-router-dom";
+
+const routers = [
+  {
+    id: 1,
+    path: "/",
+    name: "All Projects",
+    icon: <Projector />,
+  },
+  {
+    id: 2,
+    path: "/add-project",
+    name: "Create Projects",
+    icon: <Edit />,
+  },
+  {
+    id: 3,
+    path: "/write-blog",
+    name: "Write Blog",
+    icon: <Edit />,
+  },
+];
 
 const Sidebar = () => {
   const router = useLocation();
@@ -13,34 +34,24 @@ const Sidebar = () => {
         </h2>
       </div>
       <ul className="">
-        <li
-          className={` bg-transparent transition-colors  hover:bg-fuchsia-800 `}
-        >
-          <Link
-            to="/add-project"
-            className={`px-5 flex items-center gap-3 text-white py-4 ${
-              router.pathname === "/add-project" ? "bg-fuchsia-800" : ""
+        {routers.map((route) => (
+          <li
+            key={route?.id}
+            className={` bg-transparent transition-colors  hover:bg-fuchsia-800 ${
+              router.pathname === route?.path ? "bg-fuchsia-800" : ""
             }`}
           >
-            <Edit />
-            Create Project
-          </Link>
-        </li>
-        <li
-          className={` bg-transparent transition-colors  hover:bg-fuchsia-800 ${
-            router.pathname === "/write-blog" ? "bg-fuchsia-800" : ""
-          }`}
-        >
-          <Link
-            to="/write-blog"
-            className={` flex items-center gap-3 text-white py-4 px-5 ${
-              router.pathname === "/write-blog" ? "bg-fuchsia-800" : ""
-            }`}
-          >
-            <Edit />
-            Write Blog
-          </Link>
-        </li>
+            <Link
+              to={route.path}
+              className={` flex items-center gap-3 text-white py-4 px-5 ${
+                router.pathname === route?.path ? "bg-fuchsia-800" : ""
+              }`}
+            >
+              {route?.icon}
+              {route?.name}
+            </Link>
+          </li>
+        ))}
       </ul>
     </div>
   );
