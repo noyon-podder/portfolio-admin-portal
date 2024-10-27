@@ -1,4 +1,5 @@
 import { FormEvent, useState } from "react";
+import toast from "react-hot-toast";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
@@ -8,13 +9,41 @@ const AddProject = () => {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [clientName, setClientName] = useState("");
+  const [imageLink, setImageLink] = useState("");
 
-  const handleAddProjectForm = (e: FormEvent) => {
+  const handleAddProjectForm = async (e: FormEvent) => {
     e.preventDefault();
 
-    const result = { title, category, clientName, value };
+    const result = {
+      title,
+      category,
+      client: clientName,
+      description: value,
+      imageLink,
+    };
 
-    console.log(result);
+    const response = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/api/project`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(result),
+      }
+    );
+
+    const data = await response.json();
+
+    if (data?.success) {
+      setTitle("");
+      setCategory("");
+      setValue("");
+      setClientName("");
+      setImageLink("");
+      toast.success(data?.message);
+    }
+    console.log(data);
   };
   return (
     <div className="w-full ">
@@ -28,6 +57,7 @@ const AddProject = () => {
             <h2 className="font-semibold text-base">Project Title</h2>
             <input
               type="text"
+              value={title}
               name="title"
               onChange={(e) => setTitle(e.target.value)}
               className="w-full py-2 border px-4 outline-none mt-2"
@@ -36,6 +66,7 @@ const AddProject = () => {
           <div className="lg:w-1/2 w-full">
             <h2 className="font-semibold text-base">Project Category</h2>
             <input
+              value={category}
               name="category"
               type="text"
               onChange={(e) => setCategory(e.target.value)}
@@ -59,6 +90,7 @@ const AddProject = () => {
             <h2 className="font-semibold text-base">Client Name</h2>
             <input
               type="text"
+              value={clientName}
               name="clientName"
               onChange={(e) => setClientName(e.target.value)}
               className="w-full py-2 border px-4 outline-none mt-2"
@@ -67,7 +99,10 @@ const AddProject = () => {
           <div className="lg:w-1/2 w-full">
             <h2 className="font-semibold text-base">Upload Image</h2>
             <input
-              type="file"
+              type="text"
+              value={imageLink}
+              placeholder="http://image.com"
+              onChange={(e) => setImageLink(e.target.value)}
               className="w-full py-2 border px-4 outline-none mt-2"
             />
           </div>
