@@ -2,6 +2,7 @@ import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { baseAPi } from "../libs/baseApi";
 
 const AddProject = () => {
   const [value, setValue] = useState("");
@@ -22,16 +23,13 @@ const AddProject = () => {
       imageLink,
     };
 
-    const response = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/api/project`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(result),
-      }
-    );
+    const response = await fetch(`${baseAPi}/api/project`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(result),
+    });
 
     const data = await response.json();
 
