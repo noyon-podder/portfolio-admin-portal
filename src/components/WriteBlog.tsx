@@ -1,6 +1,8 @@
 import { FormEvent, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { baseAPi } from "../libs/baseApi";
+import toast from "react-hot-toast";
 
 const WriteBlog = () => {
   const [value, setValue] = useState("");
@@ -9,12 +11,30 @@ const WriteBlog = () => {
   const [category, setCategory] = useState("");
   const [imageLink, setImageLink] = useState("");
 
-  const handleAddProjectForm = (e: FormEvent) => {
+  const handleAddProjectForm = async (e: FormEvent) => {
     e.preventDefault();
 
-    const result = { title, category, imageLink, value };
+    const result = { title, category, imageLink, content: value };
 
-    console.log(result);
+    const response = await fetch(`${baseAPi}/api/blog`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(result),
+    });
+
+    const data = await response.json();
+
+    if (data?.success) {
+      setValue("");
+      setTitle("");
+      setCategory("");
+      setImageLink("");
+      toast.success(data?.message);
+    } else {
+      toast.error("something went wrong");
+    }
   };
   return (
     <div className="w-full ">
@@ -28,6 +48,7 @@ const WriteBlog = () => {
             <h2 className="font-semibold text-base">Blog Title</h2>
             <input
               type="text"
+              value={title}
               name="title"
               placeholder="Enter Blog Title"
               onChange={(e) => setTitle(e.target.value)}
@@ -38,6 +59,7 @@ const WriteBlog = () => {
             <h2 className="font-semibold text-base">Blog Category</h2>
             <input
               name="category"
+              value={category}
               placeholder="Enter Blog Category"
               type="text"
               onChange={(e) => setCategory(e.target.value)}
@@ -62,6 +84,7 @@ const WriteBlog = () => {
             <h2 className="font-semibold text-base">Blog Image</h2>
             <input
               type="text"
+              value={imageLink}
               placeholder="Enter Image Hosted URL"
               onChange={(e) => setImageLink(e.target.value)}
               className="w-full py-2 border px-4 outline-none mt-2"

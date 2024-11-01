@@ -5,35 +5,34 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 
-export interface IProject {
+export interface Iblog {
   _id: string;
   title: string;
-  description: string;
+  content: string;
+  author?: string;
   imageLink: string;
   category: string;
-  client: string;
-  liveURL: string;
 }
 
-const ProjectsTable = ({ projectsData }: { projectsData: IProject[] }) => {
+const BlogTable = ({ blog }: { blog: Iblog[] }) => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationKey: ["PROJECT"],
-    mutationFn: (projectId: string) => {
-      return axios.delete(`${baseAPi}/api/project/${projectId}`);
+    mutationKey: ["BLOG"],
+    mutationFn: (blogId: string) => {
+      return axios.delete(`${baseAPi}/api/blog/${blogId}`);
     },
     onSuccess: (data: any) => {
-      toast.success(data?.data?.message || "Project deleted successfully");
-      queryClient.invalidateQueries({ queryKey: ["PROJECT"] });
+      toast.success(data?.data?.message || "blog deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["BLOG"] });
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Failed to delete project");
+      toast.error(error?.response?.data?.message || "Failed to delete blog");
     },
   });
 
   // Example trigger function
-  const handleDelete = (projectId: string) => {
-    mutation.mutate(projectId);
+  const handleDelete = (blogId: string) => {
+    mutation.mutate(blogId);
   };
   return (
     <section className="container px-4 mx-auto">
@@ -67,21 +66,14 @@ const ProjectsTable = ({ projectsData }: { projectsData: IProject[] }) => {
                       <strong className="text-black">Category</strong>
                     </th>
 
-                    <th
-                      scope="col"
-                      className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 "
-                    >
-                      <b className="text-gray-900">Client</b>
-                    </th>
-
                     <th scope="col" className="relative py-3.5 px-4">
                       <span className="sr-only">Edit</span>
                     </th>
                   </tr>
                 </thead>
-                {projectsData?.map((project: IProject) => (
+                {blog?.map((blog) => (
                   <tbody
-                    key={project?._id}
+                    key={blog?._id}
                     className="bg-white divide-y divide-gray-200  "
                   >
                     <tr>
@@ -90,8 +82,8 @@ const ProjectsTable = ({ projectsData }: { projectsData: IProject[] }) => {
                           <div className="flex items-center gap-x-2 border px-4">
                             <img
                               className="object-cover w-20 h-10 "
-                              src={project?.imageLink}
-                              alt={project?.title}
+                              src={blog?.imageLink}
+                              alt={blog?.title}
                             />
                           </div>
                         </div>
@@ -99,21 +91,18 @@ const ProjectsTable = ({ projectsData }: { projectsData: IProject[] }) => {
                       <td className="px-12 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
                         <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 capitalize ">
                           <h2 className="text-sm font-normal ">
-                            {project?.title}
+                            {blog?.title}
                           </h2>
                         </div>
                       </td>
                       <td className="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
-                        {project?.category}
-                      </td>
-                      <td className="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
-                        {project?.client}
+                        {blog?.category}
                       </td>
 
                       <td className="px-4 py-4 text-sm whitespace-nowrap">
                         <div className="flex items-center gap-x-6">
                           <button
-                            onClick={() => handleDelete(project?._id)}
+                            onClick={() => handleDelete(blog?._id)}
                             className="text-gray-500 transition-colors duration-200   hover:text-red-500 focus:outline-none"
                           >
                             <svg
@@ -132,7 +121,7 @@ const ProjectsTable = ({ projectsData }: { projectsData: IProject[] }) => {
                             </svg>
                           </button>
 
-                          <Link to={`/${project?._id}`}>
+                          <Link to={`/blog/${blog?._id}`}>
                             <button className="text-gray-500 transition-colors duration-200   hover:text-yellow-500 focus:outline-none">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -164,4 +153,4 @@ const ProjectsTable = ({ projectsData }: { projectsData: IProject[] }) => {
   );
 };
 
-export default ProjectsTable;
+export default BlogTable;

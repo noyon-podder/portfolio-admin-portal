@@ -4,6 +4,8 @@ import AddProject from "../components/AddProject";
 import WriteBlog from "../components/WriteBlog";
 import AllProject from "../components/AllProject";
 import UpdateProject from "../components/UpdateProject";
+import GetAllBlog from "../components/GetAllBlog";
+import UpdateBlog from "../components/UpdateBlog";
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +28,14 @@ export const router = createBrowserRouter([
       {
         path: "/:projectId",
         element: <UpdateProject />,
+      },
+      {
+        path: "/blog",
+        element: <GetAllBlog />,
+      },
+      {
+        path: "/blog/:blogId",
+        element: <UpdateBlog />,
       },
     ],
   },

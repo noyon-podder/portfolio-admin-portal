@@ -5,9 +5,9 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { baseAPi } from "../libs/baseApi";
 import { useNavigate, useParams } from "react-router-dom";
-import { IProject } from "./ProjectTable";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { Iblog } from "./BlogTable";
 
 interface IupdateData {
   title?: string;
@@ -18,49 +18,47 @@ interface IupdateData {
   liveURL?: string;
 }
 
-const UpdateProject = () => {
-  const { projectId } = useParams<{ projectId: string }>();
+const UpdateBlog = () => {
+  const { blogId } = useParams<{ blogId: string }>();
   const [value, setValue] = useState<string>("");
-  const [singleProjectData, setSingleProjectData] = useState<IProject | null>(
-    null
-  );
+  const [singleblogData, setSingleblogData] = useState<Iblog | null>(null);
   const navigate = useNavigate();
 
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationKey: ["PROJECT"],
-    mutationFn: (updatedData: Partial<IProject>) => {
-      return axios.put(`${baseAPi}/api/project/${projectId}`, updatedData);
+    mutationKey: ["blog"],
+    mutationFn: (updatedData: Partial<Iblog>) => {
+      return axios.put(`${baseAPi}/api/blog/${blogId}`, updatedData);
     },
     onSuccess: (data) => {
-      toast.success(data?.data?.message || "Project updated successfully");
-      queryClient.invalidateQueries({ queryKey: ["PROJECT"] });
-      navigate("/");
+      toast.success(data?.data?.message || "blog updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["blog"] });
+      navigate("/blog");
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Failed to update project");
+      toast.error(error?.response?.data?.message || "Failed to update blog");
     },
   });
 
   useEffect(() => {
-    const fetchSingleProject = async () => {
+    const fetchSingleblog = async () => {
       try {
-        const res = await fetch(`${baseAPi}/api/project/${projectId}`);
+        const res = await fetch(`${baseAPi}/api/blog/${blogId}`);
         const data = await res.json();
 
-        setSingleProjectData(data?.data);
+        setSingleblogData(data?.data);
         setValue(data?.data?.description || "");
       } catch (error: any) {
         console.log(error);
-        toast.error("Failed to fetch project data");
+        toast.error("Failed to fetch blog data");
       }
     };
 
-    fetchSingleProject();
-  }, [projectId]);
+    fetchSingleblog();
+  }, [blogId]);
 
-  const handleAddProjectForm = (e: FormEvent<HTMLFormElement>) => {
+  const handleAddblogForm = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
@@ -83,23 +81,23 @@ const UpdateProject = () => {
   return (
     <div className="w-full">
       <div className="border-b px-5 py-5 w-full">
-        <h2 className="text-[20px] font-bold">Update Your Project</h2>
+        <h2 className="text-[20px] font-bold">Update Your blog</h2>
       </div>
-      <form className="px-5 py-10" onSubmit={handleAddProjectForm}>
+      <form className="px-5 py-10" onSubmit={handleAddblogForm}>
         <div className="flex gap-5 flex-wrap lg:flex-nowrap">
           <div className="lg:w-1/2 w-full">
-            <h2 className="font-semibold text-base">Project Title</h2>
+            <h2 className="font-semibold text-base">blog Title</h2>
             <input
               type="text"
-              defaultValue={singleProjectData?.title || ""}
+              defaultValue={singleblogData?.title || ""}
               name="title"
               className="w-full py-2 border px-4 outline-none mt-2"
             />
           </div>
           <div className="lg:w-1/2 w-full">
-            <h2 className="font-semibold text-base">Project Category</h2>
+            <h2 className="font-semibold text-base">blog Category</h2>
             <input
-              defaultValue={singleProjectData?.category || ""}
+              defaultValue={singleblogData?.category || ""}
               name="category"
               type="text"
               className="w-full py-2 border px-4 outline-none mt-2"
@@ -108,7 +106,7 @@ const UpdateProject = () => {
         </div>
 
         <div className="mt-5">
-          <h2 className="font-semibold text-base mb-5">Project Description</h2>
+          <h2 className="font-semibold text-base mb-5">blog Description</h2>
           <ReactQuill
             theme="snow"
             value={value} // Use state value
@@ -119,32 +117,11 @@ const UpdateProject = () => {
 
         <div className="flex gap-5 mt-20 flex-wrap lg:flex-nowrap">
           <div className="lg:w-1/2 w-full">
-            <h2 className="font-semibold text-base">Client Name</h2>
-            <input
-              type="text"
-              defaultValue={singleProjectData?.client || ""}
-              name="clientName"
-              className="w-full py-2 border px-4 outline-none mt-2"
-            />
-          </div>
-          <div className="lg:w-1/2 w-full">
             <h2 className="font-semibold text-base">Upload Image</h2>
             <input
               type="text"
               name="imageLink"
-              defaultValue={singleProjectData?.imageLink || ""}
-              className="w-full py-2 border px-4 outline-none mt-2"
-            />
-          </div>
-        </div>
-
-        <div className="flex gap-5 mt-10 flex-wrap lg:flex-nowrap">
-          <div className="lg:w-1/2 w-full">
-            <h2 className="font-semibold text-base">Live Link</h2>
-            <input
-              type="text"
-              defaultValue={singleProjectData?.liveURL || ""}
-              name="liveURL"
+              defaultValue={singleblogData?.imageLink || ""}
               className="w-full py-2 border px-4 outline-none mt-2"
             />
           </div>
@@ -161,4 +138,4 @@ const UpdateProject = () => {
   );
 };
 
-export default UpdateProject;
+export default UpdateBlog;

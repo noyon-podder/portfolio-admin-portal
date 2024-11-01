@@ -1,4 +1,4 @@
-import { Edit, Projector } from "lucide-react";
+import { Edit, Projector, TableOfContents } from "lucide-react";
 
 import { Link, useLocation } from "react-router-dom";
 
@@ -21,11 +21,17 @@ const routers = [
     name: "Write Blog",
     icon: <Edit />,
   },
+  {
+    id: 3,
+    path: "/blog",
+    name: "All Blogs",
+    icon: <TableOfContents />,
+  },
 ];
 
 const Sidebar = () => {
   const router = useLocation();
-  console.log(router.pathname);
+
   return (
     <div className="w-[300px] hidden lg:block bg-[#121212] h-screen fixed top-0 left-0  ">
       <div className="py-5 border-b border-gray-600">
